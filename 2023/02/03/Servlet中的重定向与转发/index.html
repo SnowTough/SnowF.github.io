@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Servlet中的重定向与转发"><meta name="keywords" content="思想理解,Servlet"><meta name="author" content="SnowF"><meta name="copyright" content="SnowF"><title>Servlet中的重定向与转发 | SnowF's Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E8%BD%AC%E5%8F%91"><span class="toc-number">1.</span> <span class="toc-text">重定向、转发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E5%8F%91"><span class="toc-number">1.0.1.</span> <span class="toc-text">转发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E8%BD%AC%E5%8F%91%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E9%87%8D%E5%AE%9A%E5%90%91%EF%BC%9F%E8%BD%AC%E5%8F%91%E6%88%96%E9%87%8D%E5%AE%9A%E5%90%91%E5%90%8E%E7%BB%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E6%98%AF%E5%90%A6%E8%BF%98%E4%BC%9A%E6%89%A7%E8%A1%8C%EF%BC%9F"><span class="toc-number">1.0.2.</span> <span class="toc-text">什么时候使用转发，什么时候使用重定向？转发或重定向后续的代码是否还会执行？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E9%87%8D%E5%AE%9A%E5%90%91%E5%92%8C%E8%BD%AC%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.0.3.</span> <span class="toc-text">总结：重定向和转发的区别</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">SnowF</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">8</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">SnowF's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">目录</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">Servlet中的重定向与转发</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-03</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/JavaWeb/">JavaWeb</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="重定向、转发"><a href="#重定向、转发" class="headerlink" title="重定向、转发"></a>重定向、转发</h1><p>​	在 Servlet 中实现页面跳转有两种方式：转发、重定向</p>
+<pre><code>### 重定向（Redirect）
+</code></pre>
+<p>​	就是通过各种方法 <strong>将各种网络请求重新定个方向转到其他位置</strong> （如：网页重定向、域名重定向、路由选择的变化也是对数据报文经由路径的一种重定向）。</p>
+<p>​	由浏览器进行的页面跳转。</p>
+<p>​	<strong>举例说明</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">假设你现在所处的位置是一个论坛的登录页面，你填写了账号，密码，点击登录，如果你的账号密码正确，就自动跳转到论坛的首页，不正确就返回登录页。</span><br></pre></td></tr></table></figure>
+
+<p>​	<strong>这里的自动跳转，就是重定向的意思</strong>。或者可以说，<strong>重定向就是，在网页上设置一个约束条件，条件满足，就自动转入到其他网页、网址。</strong></p>
+<p>​	<strong>重定向的方法：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.sendRedirect(<span class="string">&quot;要跳转的地址&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>​	<strong>重定向的特点</strong></p>
+<ol>
+<li>地址栏：显示新的地址</li>
+<li>请求次数：2次</li>
+<li>请求域中的数据会丢失，因为是 2 次请求</li>
+</ol>
+<p><img src="https://p.ipic.vip/cp17mg.png" alt="img"></p>
+<p><img src="https://p.ipic.vip/r5v1p9.png" alt="img"></p>
+<h3 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h3><p>​	由服务器端进行的页面跳转。</p>
+<p>​	请求转发：一种在服务器内部的资源跳转方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">访问 A，A 请求转发了 B，访问 A 的同时也就访问到了 B。</span><br><span class="line">带参数跳到指定的页面，比如 request。</span><br><span class="line">访问 A，进入 A 的网址，然后在 A 里面请求转发 B，就是带着 A 的请求到了 B。</span><br></pre></td></tr></table></figure>
+
+<p>​	<strong>步骤</strong></p>
+<ol>
+<li>通过 request 对象获取请求转发器对象：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RequestDispatcher.getRequestDispatcher(String path);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用 RequestDispatcher 对象来进行转发：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forward (ServletRequest request, ServletResponse response);</span><br></pre></td></tr></table></figure>
+
+<p>总结：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、得到转发器：RequestDispatcher request.getRequestDispatcher(<span class="string">&quot;/跳转的地址&quot;</span>);  ：参数是要跳转的地址</span><br><span class="line"><span class="number">2</span>、实现转发：转发器对象.forward(request, response);</span><br><span class="line"></span><br><span class="line">通常写成一句话：request.getRequestDispatcher(<span class="string">&quot;/跳转的地址&quot;</span>).forward(request, response);</span><br></pre></td></tr></table></figure>
+
+<p>​	<strong>特点</strong></p>
+<ol>
+<li>浏览器地址栏路径不发生变化</li>
+<li>只能转发到当前服务器内部资源中</li>
+<li>转发是一次请求</li>
+<li>请求域中的数据不会丢失</li>
+</ol>
+<p><img src="https://p.ipic.vip/zy9dsc.png" alt="img"></p>
+<h3 id="什么时候使用转发，什么时候使用重定向？转发或重定向后续的代码是否还会执行？"><a href="#什么时候使用转发，什么时候使用重定向？转发或重定向后续的代码是否还会执行？" class="headerlink" title="什么时候使用转发，什么时候使用重定向？转发或重定向后续的代码是否还会执行？"></a>什么时候使用转发，什么时候使用重定向？转发或重定向后续的代码是否还会执行？</h3><p>​	<strong>如果要保留请求域中的数据，使用转发，否则使用重定向。</strong></p>
+<p>​	<strong>以后访问数据库，增删改使用重定向，查询使用转发。</strong></p>
+<p>​	无论转发还是重定向后续的代码都会执行。</p>
+<h3 id="总结：重定向和转发的区别"><a href="#总结：重定向和转发的区别" class="headerlink" title="总结：重定向和转发的区别"></a>总结：重定向和转发的区别</h3><table>
+<thead>
+<tr>
+<th align="center">区别</th>
+<th align="center">转发forward()</th>
+<th align="center">重定向sendRedirect()</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">根目录</td>
+<td align="center">包含项目访问地址</td>
+<td align="center">没有项目访问地址</td>
+</tr>
+<tr>
+<td align="center">地址栏</td>
+<td align="center">不会发生变化</td>
+<td align="center">会发生变化</td>
+</tr>
+<tr>
+<td align="center">哪里跳转</td>
+<td align="center">服务器端进行跳转</td>
+<td align="center">浏览器端进行跳转</td>
+</tr>
+<tr>
+<td align="center">请求域中的数据</td>
+<td align="center">不会丢失</td>
+<td align="center">会丢失</td>
+</tr>
+</tbody></table>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">SnowF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/03/Servlet中的重定向与转发/">http://example.com/2023/02/03/Servlet中的重定向与转发/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com">SnowF's Blog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%80%9D%E6%83%B3%E7%90%86%E8%A7%A3/">思想理解</a><a class="post-meta__tags" href="/tags/Servlet/">Servlet</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/02/03/JDBC4javaweb/"><span>JDBC（JavaWeb）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2023 By SnowF</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
