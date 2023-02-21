@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="RESTful / Swagger"><meta name="keywords" content=""><meta name="author" content="SnowF"><meta name="copyright" content="SnowF"><title>RESTful / Swagger | SnowF's Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#RESTful%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">RESTful介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-Method"><span class="toc-number">1.1.</span> <span class="toc-text">HTTP Method</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E2%80%94Swagger"><span class="toc-number">2.</span> <span class="toc-text">接口调试工具—Swagger</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">SnowF</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">20</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">12</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">7</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">SnowF's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">目录</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">RESTful / Swagger</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-21</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/SpringBoot/">SpringBoot</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="RESTful介绍"><a href="#RESTful介绍" class="headerlink" title="RESTful介绍"></a>RESTful介绍</h3><ul>
+<li>RESTful 是目前流行的互联网软件服务架构设计风格</li>
+<li>REST（Representational State Transfer，表述性状态转移）一词是由 Roy Thomas Fielding 在 2000 年的博士论文中提出的，它定义了互联网软件服务的架构原则，如果一个架构符合 REST 原则，则称之为 RESTful 架构</li>
+<li>REST 并不是一个标准，它更像一组客户端和服务端交互时的架构理念和设计原则，基于这种架构理念和设计原则的 Web API 更加简洁、更有层次</li>
+</ul>
+<img src="https://p.ipic.vip/gpk7z2.png" alt="RESTful" style="zoom:50%;" />
+
+<p><strong>RESTful的特点</strong></p>
+<ul>
+<li>每个 URI 都代表一种资源</li>
+<li>客户端使用 GET、POST、PUT、DELETE 四种表示操作方式的动词对服务端资源进行操作：GET（获取资源）、POST（新建&#x2F;更新资源）、PUT（更新资源）、DELETE（删除资源）</li>
+<li>通过操作资源的表现形式来实现服务端的请求操作</li>
+<li>资源的表现形式是 JSON 或者 HTML</li>
+<li>客户端与服务端之间的交互在请求之间是无状态的，从客户端到服务端的每个请求都包含必须的信息</li>
+</ul>
+<p><strong>RESTful API</strong></p>
+<ul>
+<li>符合 RESTful 规范的 Web API 需要具备如下两个关键特性：<ul>
+<li>安全性：安全的方法被期望不会产生任何副作用，当我们使用 GET 操作获取资源时，不会引起资源本身的改变，也不会引起服务器状态的改变</li>
+<li>幂等性：幂等的方法保证了重复进行一个请求和一次请求的效果相同（并不是值响应总是相同的，而是服务器上资源的状态从第一次请求后就不在改变了），在数学上幂等性是指 N 次变换和一次变换相同</li>
+</ul>
+</li>
+</ul>
+<h4 id="HTTP-Method"><a href="#HTTP-Method" class="headerlink" title="HTTP Method"></a>HTTP Method</h4><ul>
+<li>HTTP 提供了 POST、GET、PUT、DELETE 等操作类型对某个 Web 资源进行 Create、Read、Update 和 Delete 操作</li>
+<li>一个 HTTP 请求除了利用 URI 标志目标资源之外，还需要通过 HTTP Method 指定针对该资源的操作类型，一些常见的 HTTP 方法及其在 RESTful 风格下的使用：</li>
+</ul>
+<img src="https://p.ipic.vip/fvrk1b.png" alt="HTTP方法及返回值" style="zoom:50%;" />
+
+<p><strong>HTTP 状态码（拓展）</strong></p>
+<ul>
+<li><p>HTTP 定义了 40 个标准状态码，可用于传达客户端请求的结果。状态码分为以下 5 个类别：</p>
+</li>
+<li><p>1xx：信息，通信传输协议级信息</p>
+</li>
+<li><p>2xx：成功，表示客户端的请求已成功接受</p>
+</li>
+<li><p>3xx：重定向，表示客户端必须执行一些其他操作才能完成其请求</p>
+</li>
+<li><p>4xx：客户端错误，此类错误状态码指向客户端</p>
+</li>
+<li><p>5xx：服务器错误，服务器负责写错误状态码</p>
+</li>
+<li><p>RESTful API 中使用 HTTP 状态码来表示请求执行结果的状态，适用于 REST API 设计的代码以及对应的 HTTP 方法</p>
+</li>
+</ul>
+<img src="https://p.ipic.vip/5dfokb.png" alt="常用HTTP状态码（详）" style="zoom:50%;" />
+
+<p><strong>SpringBoot 实现 RESTful API</strong></p>
+<ul>
+<li><p>SpringBoot 提供的 spring-boot-starter-web 组件完全支持开发 RESTful API，提供了与 REST 操作方式（GET、POST、PUT、DELETE）对应的注解</p>
+</li>
+<li><p>@GetMapping：处理 GET 请求，获取资源</p>
+</li>
+<li><p>@PostMapping：处理 POST 请求，新增资源</p>
+</li>
+<li><p>@PutMapping：处理 PUT 请求，更新资源</p>
+</li>
+<li><p>@DeleteMapping：处理 DELETE 请求，删除资源</p>
+</li>
+<li><p>@PatchMapping：处理 PATCH 请求，用于部分更新资源</p>
+</li>
+<li><p>在 RESTful 架构中，每个网址代表一种资源，所以 URI 中建议不要包含动词，只包含名词计科，而且所用的名词往往与数据库的表格名对应</p>
+</li>
+<li><p>用户管理模块 API 示例：</p>
+</li>
+</ul>
+<img src="https://p.ipic.vip/cyx2q9.png" alt="image-20230221154222664" style="zoom:50%;" />
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@GetMapping(&quot;/user/&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getUserById</span><span class="params">(<span class="meta">@PathVariable</span> <span class="type">int</span> id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;根据 ID 获取用户&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@PostMapping(&quot;/user&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">save</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;添加用户&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@PutMapping(&quot;/user&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">update</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;更新用户&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@DeleteMapping(&quot;/user/&#123;id&#125;&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">deleteById</span><span class="params">(<span class="meta">@PathVariable</span> <span class="type">int</span> id)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;根据 ID 删除用户&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="接口调试工具—Swagger"><a href="#接口调试工具—Swagger" class="headerlink" title="接口调试工具—Swagger"></a>接口调试工具—Swagger</h3><ul>
+<li>Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务，是非常流行的 API 表达工具</li>
+<li>Swagger 能够自动生成完善的 RESTful API 文档，同时根据后台代码的修改同步更新，同时提供完整的测试页面来调试 API</li>
+</ul>
+<img src="https://p.ipic.vip/smxdq5.png" alt="Swagger" style="zoom: 50%;" />
+
+<p><strong>使用 Swagger 生成 Web API 文档</strong></p>
+<ul>
+<li>在 SpringBoot 项目中继承 Swagger 同样非常简单，只需要在项目中引入 springfox-swagger2 和 springfox-swagger-ui 依赖即可</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>配置 Swagger</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span> <span class="comment">// 启用 swagger2 功能</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Swagger2Config</span> &#123;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">      		.apiInfo(apiInfo())</span><br><span class="line">      		.select()</span><br><span class="line">      		<span class="comment">// com 包下所有 API 都交给 Swagger2 管理</span></span><br><span class="line">      		.apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com&quot;</span>))</span><br><span class="line">      		.paths(PathSelectors.any()).build();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// API 文档页面显示信息</span></span><br><span class="line">  <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()</span><br><span class="line">      		.title(<span class="string">&quot;演示项目API&quot;</span>) <span class="comment">// 标题</span></span><br><span class="line">      		.description(<span class="string">&quot;学习 Swagger2 的演示项目&quot;</span>) <span class="comment">// 描述</span></span><br><span class="line">      		.build();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<ul>
+<li>SpringBoot 2.6.X 后与 Swagger 有版本冲突问题，需要在 application.properties 加入以下配置：</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.mvc.pathmatch.matching-strategy</span>=<span class="string">ant_path_matcher</span></span><br></pre></td></tr></table></figure>
+
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">SnowF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/21/RESTful-Swagger/">http://example.com/2023/02/21/RESTful-Swagger/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com">SnowF's Blog</a>！</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/02/20/localStorage/"><span>localStorage / sessionStorage</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2023 By SnowF</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
