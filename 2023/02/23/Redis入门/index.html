@@ -119,6 +119,15 @@
 <li>查找快</li>
 <li>支持交集、并集、差集等功能</li>
 </ul>
+<p><strong>SortedSet类型</strong></p>
+<p>​	Redis 的 SortedSet 是一个可排序的 set 集合，与 java 中的 TreeSet 有些类似，但底层数据结构却差别很大。SortedSet 中的每一个元素都带有一个 score 属性，可以基于 score 属性对元素排序，底层的实现是一个跳表（SkipList）加 hash 表。</p>
+<p>​	SortedSet 具备以下特性：</p>
+<ul>
+<li>可排序</li>
+<li>元素不重复</li>
+<li>查询速度快</li>
+</ul>
+<p>​	因为 SortedSet 的可排序特性，经常被用来实现排行榜这样的功能 </p>
 <h3 id="Redis数据类型常见命令"><a href="#Redis数据类型常见命令" class="headerlink" title="Redis数据类型常见命令"></a>Redis数据类型常见命令</h3><p><strong>String</strong></p>
 <ul>
 <li>SET：添加或者修改已经存在的一个 String 类型的键值对</li>
@@ -159,6 +168,22 @@
 <li>SCARD key：返回 set 中元素的个数</li>
 <li>SISMEMBER key member：判断一个元素是否存在于 set 中</li>
 <li>SMEMBERS：获取 set 中的所有元素</li>
+<li>SINTER key1 key2…：求 key1 与 key2 的交集</li>
+<li>SDIFF key1 key2…：求 key1 与 key2 的差集</li>
+<li>SUNION key1 key2…：求 key1 与 key2 的并集</li>
+</ul>
+<p><strong>SortedSet</strong></p>
+<ul>
+<li>ZADD key score member：添加一个或多个元素到 SortedSet，如果已经存在则更新其 score 值</li>
+<li>ZREM key member：删除 sorted set 中的一个指定元素</li>
+<li>ZSCORE key member：获取 sorted set 中的指定元素的 score 值</li>
+<li>ZRANK key member：获取 sorted set 中的指定元素的排名</li>
+<li>ZCARD key：获取 sorted set 中的元素个数</li>
+<li>ZCOUNT key min max：统计 score 值在给定范围内的所有元素的个数</li>
+<li>ZINCRBY key increment member：让 sorted set 中的指定元素自增，步长为指定的 increment 值</li>
+<li>ZRANGE key min max：按照 score 排序后，获取指定排名范围内的元素</li>
+<li>ZRANGEBYSCORE key min max：按照 score 排序后，获取指定 score 范围内的元素</li>
+<li>ZDIFF、ZINTER、ZUNION：求差集、并集、交集</li>
 </ul>
 </div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">SnowF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/23/Redis入门/">http://example.com/2023/02/23/Redis入门/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com">SnowF's Blog</a>！</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/02/22/ElasticSearch%E5%85%A5%E9%97%A8/"><span>ElasticSearch入门</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2023 By SnowF</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
