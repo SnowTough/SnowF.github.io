@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="JWT跨域认证"><meta name="keywords" content=""><meta name="author" content="SnowF"><meta name="copyright" content="SnowF"><title>JWT跨域认证 | SnowF's Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Session%E8%AE%A4%E8%AF%81"><span class="toc-number">1.</span> <span class="toc-text">Session认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E8%AE%A4%E8%AF%81"><span class="toc-number">2.</span> <span class="toc-text">Token认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT"><span class="toc-number">3.</span> <span class="toc-text">JWT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text">JWT的特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JWT%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">JWT的实现</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">SnowF</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">28</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">11</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">SnowF's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">目录</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">JWT跨域认证</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-27</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="Session认证"><a href="#Session认证" class="headerlink" title="Session认证"></a>Session认证</h3><p>​	互联网服务离不开用户认证。一般流程是下面这样：</p>
+<ul>
+<li>用户向服务器发送用户名和密码</li>
+<li>服务器验证通过后，在当前对话（session）里面保存相关数据，比如用户角色、登录时间等</li>
+<li>服务器向用户返回一个 session_id，写入用户的 Cookie</li>
+<li>用户随后的每一次请求，都会通过 Cookie，将 session_id 传回服务器</li>
+<li>服务器收到 session_id，找到前期保存的数据，由此得知用户的身份</li>
+</ul>
+<img src="https://p.ipic.vip/628yv9.png" alt="Session认证流程" style="zoom:33%;" />
+
+<p>​	Session 认证的方式应用非常普遍，但也存在一些问题，扩展性不好，如果是服务器集群，或者是跨域的服务导向架构，就要求 session 数据共享，每台服务器都能够读取 session，针对此种问题一般有两种方案：</p>
+<ul>
+<li>一种解决方案是 session 数据持久化，写入数据库或别的持久层。各种服务收到请求后，都向持久层请求数据。这种方案的优点是架构清晰，缺点是工程量比较大</li>
+<li>一种方案是服务器不再保存 session 数据，所有数据都保存在客户端，每次请求都发回服务器。Token 认证就是这种方案的一个代表</li>
+</ul>
+<h3 id="Token认证"><a href="#Token认证" class="headerlink" title="Token认证"></a>Token认证</h3><p>​	Token 是在服务端产生的一串字符串，是客户端访问资源接口（API）时所需要的资源凭证，流程如下：</p>
+<ul>
+<li>客户端使用用户名跟密码请求登录，服务端收到请求，去验证用户名与密码</li>
+<li>验证成功后，服务端会签发一个 token 并把这个 token 发送给客户端</li>
+<li>客户端收到 token 后，会把它存储起来，比如放在 cookie 里或者 localStorage 里</li>
+<li>客户端每次向服务端请求资源的时候需要带着服务端签发的 token</li>
+<li>服务端收到请求，然后去验证客户端请求里面带着的 token，如果验证成功，就向客户端返回请求的数据</li>
+</ul>
+<img src="https://p.ipic.vip/7mtm1g.png" alt="Token认证流程" style="zoom:33%;" />
+
+<ul>
+<li>基于 token 的用户认证是一种服务端无状态的认证方式，服务端不用存放 token 数据</li>
+<li>用解析 token 的计算时间换取 session 的存储空间，从而减轻服务器的压力，减少频繁的查询数据库</li>
+<li>token 完全由应用管理，所以它可以避开同源策略</li>
+</ul>
+<h3 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h3><ul>
+<li>JSON Web Token（简称 JWT）是一个 token 的具体实现方式，是目前最流行的跨域认证解决方案</li>
+<li>JWT 的原理是，服务器认证以后，生成一个 JSON 对象，发回给用户，具体如下：</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;姓名&quot;</span><span class="punctuation">:</span> <span class="string">&quot;张三&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;角色&quot;</span><span class="punctuation">:</span> <span class="string">&quot;管理员&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;到期时间&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2018年7月1日0点0分&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用户与服务端通信的时候，都要发回这个 JSON 对象。服务器完全只靠这个对象认定用户身份</li>
+<li>为了防止用户篡改数据，服务器在生成这个对象的时候，会加上签名</li>
+</ul>
+<p>​	JWT 由三个部分组成，依次如下：</p>
+<ul>
+<li>Header（头部）</li>
+<li>Payload（负载）</li>
+<li>Signature（签名）</li>
+</ul>
+<p>​	三部分最终组合为完整的字符串，中间使用 . 分隔，如下：</p>
+<ul>
+<li>Header.Payload.Signature</li>
+</ul>
+<p><strong>Header</strong></p>
+<ul>
+<li>Header 部分是一个 JSON 对象，描述 JWT 的元数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;HS256&quot;</span>,</span><br><span class="line">  <span class="string">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>alg 属性表示签名的算法（algorithm），默认是 HMAC SHA256（写成 HS256）</li>
+<li>type 属性表示这个令牌（token）的类型（type），JWT 令牌统一写为 JWT</li>
+<li>最后，将上面的 JSON 对象使用 Base64URL 算法转成字符串</li>
+</ul>
+<p><strong>Payload</strong></p>
+<ul>
+<li>Payload 部分也是一个 JSON 对象，用来存放实际需要传递的数据。JWT 规定了 7 个官方字段供选用<ul>
+<li>iss（issuer）：签发人</li>
+<li>exp（expiration time）：过期时间</li>
+<li>sub（subject）：主题</li>
+<li>aud（audience）：受众</li>
+<li>nbf（Not Before）：生效时间</li>
+<li>iat（Issued At）：签发时间</li>
+<li>jti（JWT ID）：编号</li>
+</ul>
+</li>
+<li>注意，JWT 默认是不加密的，任何人都可以读到，所以不要把秘密信息放在这个部分</li>
+<li>这个 JSON 对象也要使用 Base64URL 算法转成字符串</li>
+</ul>
+<p><strong>Signature</strong></p>
+<ul>
+<li>Signature 部分是对前两部分的签名，防止数据篡改</li>
+<li>首先，需要指定一个秘钥（secret）。这个秘钥只有服务器才知道，不能泄露给用户</li>
+<li>然后，使用 Header 里面指定的签名算法（默认是 HMAC SHA256），按照下面的公式产生签名</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMACSHA256(</span><br><span class="line">	base64UrlEncode(header) + <span class="string">&quot;.&quot;</span> +</span><br><span class="line">  base64UrlEncode(payload),</span><br><span class="line">  secret)</span><br></pre></td></tr></table></figure>
+
+<p><strong>JWT</strong></p>
+<p>​	算出签名以后，把 Header、Payload、Signature 三个部分拼成一个字符串，每个部分之间用“点”（<code>.</code>）分隔，就可以返回给用户</p>
+<img src="https://p.ipic.vip/zdmfdt.png" alt="JWT" style="zoom: 33%;" />
+
+
+
+<h3 id="JWT的特点"><a href="#JWT的特点" class="headerlink" title="JWT的特点"></a>JWT的特点</h3><ul>
+<li>客户端收到服务器返回的 JWT，可以存储在 Cookie 里，也可以存储在 localStorage</li>
+<li>客户端每次与服务器通信，都要带上这个 JWT，可以把它放在 Cookie 里自动发送，但是这样不能跨域</li>
+<li>更好的做法是放在 HTTP 请求的头信息 <code>Authorization</code>字段里面，单独发送</li>
+</ul>
+<h3 id="JWT的实现"><a href="#JWT的实现" class="headerlink" title="JWT的实现"></a>JWT的实现</h3><p><strong>加入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>生成 Token</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 7 天过期</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">long</span> <span class="variable">expire</span> <span class="operator">=</span> <span class="number">604800</span>;</span><br><span class="line"><span class="comment">// 32 位密钥</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">secret</span> <span class="operator">=</span> <span class="string">&quot;abcdefghiabcgfghiabdfkajsd&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成 token </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">generateToken</span><span class="params">(String username)</span> &#123;</span><br><span class="line">  <span class="type">Date</span> <span class="variable">now</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">  <span class="type">Date</span> <span class="variable">expiration</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>(now.getTime() + <span class="number">1000</span> * expire);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> Jwts.builder()</span><br><span class="line">    				.setHeaderParam(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;JWT&quot;</span>)</span><br><span class="line">    				.setSubject(username)</span><br><span class="line">    				.setIssuedAt(now)</span><br><span class="line">    				.setExpiration(expiration)</span><br><span class="line">    				.signWith(SignatureAlgorithm.HS512, secret)</span><br><span class="line">    				.compact();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">SnowF</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/02/27/JWT跨域认证/">http://example.com/2023/02/27/JWT跨域认证/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com">SnowF's Blog</a>！</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/02/27/VueX%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86/"><span>VueX状态管理</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://w.wallhaven.cc/full/9d/wallhaven-9dmeyw.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2023 By SnowF</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
